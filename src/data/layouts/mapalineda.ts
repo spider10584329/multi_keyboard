@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Mapalineda – Nepali Traditional (Remington) keyboard layout.
  *
  * Three layers per physical key:

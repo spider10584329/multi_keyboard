@@ -23,7 +23,7 @@ import { DemoPage } from "./pages/DemoPage";
 
 function App() {
   return (
-    <KeyboardProvider defaultLayout="mapalineda">
+    <KeyboardProvider defaultLayout="nepali_alpha_1">
       {/* Your page content goes here */}
       <DemoPage />
 

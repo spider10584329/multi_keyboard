@@ -118,6 +118,12 @@ export function KeyboardProvider({
   const insertKey = useCallback((key: KeyDef) => {
     const target = targetRef.current;
 
+    // ─ Page switch ──────────────────────────────────────────────────
+    if (key.action === "page" && key.switchTarget) {
+      setActiveLayout(key.switchTarget);
+      return;
+    }
+
     // ─ Modifier toggle actions ───────────────────────────────────────
     if (key.action === "shift") {
       const next = !shiftRef.current;

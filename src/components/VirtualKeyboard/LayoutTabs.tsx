@@ -19,27 +19,36 @@ interface LayoutTabsProps {
 }
 
 export function LayoutTabs({ activeLayout, onSelect }: LayoutTabsProps) {
+  // Hidden layouts (e.g. nepali_alpha_2) are reached only via in-keyboard
+  // page-switch keys, not via the tab bar.
+  const visibleLayouts = allLayouts.filter((l) => !l.hidden);
+
   return (
     <div className="vkb-tabs" role="tablist" aria-label="Script layout">
-      {allLayouts.map((layout) => (
-        <button
-          key={layout.id}
-          role="tab"
-          type="button"
-          className={`vkb-tab ${
-            activeLayout === layout.id ? "vkb-tab--active" : ""
-          }`.trim()}
-          aria-selected={activeLayout === layout.id}
-          onPointerDown={(e) => {
-            // Keep focus on the input while switching layouts
-            e.preventDefault();
-            onSelect(layout.id as LayoutId);
-          }}
-          style={{ touchAction: "manipulation" }}
-        >
-          {layout.label}
-        </button>
-      ))}
+      {visibleLayouts.map((layout) => {
+        // A tab is active when the layout itself is active, OR when a hidden
+        // sibling layout is active (e.g. show वर्णमाला tab lit while on page 2).
+        const isActive =
+          activeLayout === layout.id ||
+          (layout.id === "nepali_alpha_1" && activeLayout === "nepali_alpha_2");
+
+        return (
+          <button
+            key={layout.id}
+            role="tab"
+            type="button"
+            className={`vkb-tab ${isActive ? "vkb-tab--active" : ""}`.trim()}
+            aria-selected={isActive}
+            onPointerDown={(e) => {
+              e.preventDefault();
+              onSelect(layout.id as LayoutId);
+            }}
+            style={{ touchAction: "manipulation" }}
+          >
+            {layout.label}
+          </button>
+        );
+      })}
     </div>
   );
 }

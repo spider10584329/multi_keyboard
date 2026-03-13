@@ -186,9 +186,20 @@
 .vkb-key--shift,
 .vkb-key--caps,
 .vkb-key--ctrl,
-.vkb-key--tab {
+.vkb-key--tab,
+.vkb-key--page {
   background: var(--vkb-action-bg);
   font-size: clamp(11px, 1.8vw, 16px);
+}
+
+/* Page-switch key: subtle accent so it stands out from regular action keys */
+.vkb-key--page {
+  background: #3a3a70;
+  color: #c8c8ff;
+}
+
+.vkb-key--page:hover {
+  background: #4a4a90;
 }
 
 .vkb-key--close {

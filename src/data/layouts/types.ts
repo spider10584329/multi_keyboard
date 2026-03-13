@@ -3,7 +3,13 @@
  */
 
 /** All supported layout identifiers */
-export type LayoutId = "mapalineda" | "latin" | "cyrillic" | "greek";
+export type LayoutId =
+  | "mapalineda"
+  | "latin"
+  | "cyrillic"
+  | "greek"
+  | "nepali_alpha_1"
+  | "nepali_alpha_2";
 
 /**
  * A single key definition.
@@ -18,9 +24,7 @@ export type KeyDef = {
   label: string;
   /** Unicode string to insert – omit for pure action keys */
   value?: string;
-  /**
-   * Unicode string inserted when Shift is active (one-shot layer).
-   */
+  /** Unicode string inserted when Shift is active (one-shot layer). */
   shiftValue?: string;
   /**
    * Unicode string inserted when Caps Lock is active (sticky third layer).
@@ -30,8 +34,16 @@ export type KeyDef = {
   capsValue?: string;
   /** Human-readable Unicode code point(s), e.g. "U+0915" */
   codePoint?: string;
-  /** For non-character keys */
-  action?: "backspace" | "enter" | "space" | "shift" | "caps" | "ctrl" | "tab" | "close";
+  /**
+   * For non-character keys.
+   * "page" – switch to the layout named by `switchTarget`.
+   */
+  action?: "backspace" | "enter" | "space" | "shift" | "caps" | "ctrl" | "tab" | "close" | "page";
+  /**
+   * Only used when action === "page".
+   * Identifies which layout to activate when this key is pressed.
+   */
+  switchTarget?: LayoutId;
   /** Visual width class applied to the key button */
   width?: "normal" | "wide" | "extraWide";
 };
@@ -40,6 +52,11 @@ export type KeyDef = {
 export type KeyboardLayout = {
   id: LayoutId;
   label: string;
+  /**
+   * When true this layout is not shown as its own tab in LayoutTabs.
+   * It is still reachable via a "page" switch key inside another layout.
+   */
+  hidden?: boolean;
   /** Ordered rows of keys, top to bottom */
   rows: KeyDef[][];
 };

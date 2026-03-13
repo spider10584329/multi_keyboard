@@ -22,14 +22,15 @@ export { greekLayout }        from "./greek";
 export { nepaliAlpha1Layout } from "./nepali_alpha_1";
 export { nepaliAlpha2Layout } from "./nepali_alpha_2";
 
-/** All supported layouts in display order */
+/** All supported layouts in display order.
+ * mapalinedaLayout is intentionally omitted – replaced by nepali_alpha_1/2.
+ */
 export const allLayouts: KeyboardLayout[] = [
-  mapalinedaLayout,
+  nepaliAlpha1Layout,
+  nepaliAlpha2Layout,
   latinLayout,
   cyrillicLayout,
   greekLayout,
-  nepaliAlpha1Layout,
-  nepaliAlpha2Layout,
 ];
 
 /** Lookup map: layoutId → KeyboardLayout */

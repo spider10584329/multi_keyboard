@@ -57,14 +57,14 @@ interface KeyboardProviderProps {
   children: React.ReactNode;
   /**
    * Layout shown when the keyboard first appears.
-   * Defaults to "mapalineda" (Nepali).
+   * Defaults to "nepali_alpha_1" (Nepali alphabet page 1).
    */
   defaultLayout?: LayoutId;
 }
 
 export function KeyboardProvider({
   children,
-  defaultLayout = "mapalineda",
+  defaultLayout = "nepali_alpha_1",
 }: KeyboardProviderProps) {
   const [visible, setVisible] = useState(false);
   const [activeLayout, setActiveLayout] = useState<LayoutId>(defaultLayout);

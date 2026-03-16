@@ -26,9 +26,6 @@
 
 import type { KeyboardLayout } from "./types";
 
-const DC = "\u25CC"; // U+25CC DOTTED CIRCLE — standard display base for combining marks
-const H  = "\u094D"; // U+094D DEVANAGARI SIGN VIRAMA (halant / virama)
-
 export const nepaliAlpha2Layout: KeyboardLayout = {
   id: "nepali_alpha_2",
   label: "वर्णमाला",

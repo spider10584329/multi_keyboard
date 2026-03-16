@@ -19,6 +19,29 @@
    4. Kohinoor Devanagari   – macOS / iOS system font
    5. System UI             – graceful Latin fallback
 */
+
+/* Load a high-quality Devanagari font for Nepali keyboard (applied only
+  when the Nepali layout is active via the body.vkb-nepal-font class). */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap');
+
+/* Preeti (legacy Nepali font) – not bundled by default.
+   To enable Preeti, place your Preeti font files at:
+     src/assets/fonts/Preeti.ttf  (or .woff/.woff2)
+   The @font-face below will load them if present; otherwise the stylesheet
+   falls back to modern Devanagari fonts (Noto Sans Devanagari, Mangal, ...).
+*/
+@font-face {
+  font-family: 'Preeti';
+  /* Development-safe: prefer the locally installed Preeti font. If you want
+     the project to bundle a copy, place Preeti files in `public/assets/fonts/`
+     and re-enable the url() sources below (uncomment and restart dev server).
+  */
+  src: local('Preeti');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --vkb-font: "Noto Sans Devanagari", "Noto Sans", Mangal,
     "Lohit Devanagari", "Kohinoor Devanagari", system-ui, sans-serif;
@@ -44,7 +67,7 @@
   --vkb-key-height:    clamp(34px, 5.5vw, 56px);
   --vkb-key-gap:       clamp(2px, 0.5vw, 6px);
   --vkb-key-radius:    5px;
-  --vkb-font-size:     clamp(13px, 4.2vw, 23px);
+  --vkb-font-size:     clamp(15px, 5vw, 28px);
   --vkb-tab-font-size: clamp(12px, 3.2vw, 17px);
   --vkb-tab-height:    clamp(28px, 4vw, 36px);
   --vkb-padding:       clamp(4px, 1.5vw, 12px);
@@ -175,6 +198,16 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Script-specific font-family (no font-size overrides — all keys share
+   the same --vkb-font-size so every character renders at a uniform size). */
+.vkb-key--deva {
+  font-family: 'Noto Sans Devanagari', Mangal, 'Preeti', 'Noto Sans', system-ui, sans-serif;
+}
+
+.vkb-key--latin {
+  font-family: var(--vkb-font);
+}
+
 /* Width modifiers – expressed as flex ratios so they scale with the row */
 .vkb-key--wide       { flex: 2 2 0; }
 .vkb-key--extra-wide { flex: 4 4 0; max-width: none; }
@@ -189,7 +222,7 @@
 .vkb-key--tab,
 .vkb-key--page {
   background: var(--vkb-action-bg);
-  font-size: clamp(13px, 2.4vw, 18px);
+  font-size: clamp(14px, 3vw, 20px);
 }
 
 /* Page-switch key: subtle accent so it stands out from regular action keys */
@@ -216,6 +249,21 @@
 /* Hover state (pointer devices) */
 .vkb-key:hover {
   background: var(--vkb-key-bg-hover);
+}
+/* ===== Nepal-only font application =====
+  When the provider toggles `body.vkb-nepal-font`, apply the Devanagari
+  font to keyboard keys and only to tabs that represent Nepali layouts
+  (tabs must have a `data-layout` attribute starting with "nepali"). */
+
+.vkb-nepal-font .vkb-key,
+.vkb-nepal-font .vkb-tab[data-layout^="nepali"] {
+  font-family: 'Preeti', 'Noto Sans Devanagari', Mangal, 'Noto Sans', system-ui, sans-serif;
+}
+
+.vkb-nepal-font input,
+.vkb-nepal-font textarea,
+.vkb-nepal-font [contenteditable] {
+  font-family: 'Preeti', 'Noto Sans Devanagari', Mangal, 'Noto Sans', system-ui, sans-serif !important;
 }
 
 .vkb-key--backspace:hover,
@@ -245,7 +293,7 @@
   :root {
     --vkb-key-gap:       2px;
     --vkb-key-height:    32px;
-    --vkb-font-size:     12px;
+    --vkb-font-size:     14px;
     --vkb-tab-font-size: 11px;
     --vkb-tab-height:    26px;
     --vkb-padding:       3px;
@@ -258,7 +306,7 @@
   .vkb-key--caps,
   .vkb-key--ctrl,
   .vkb-key--tab {
-    font-size: 10px;
+    font-size: 12px;
   }
 }
 
@@ -267,7 +315,7 @@
   :root {
     --vkb-key-gap:       2px;
     --vkb-key-height:    36px;
-    --vkb-font-size:     14px;
+    --vkb-font-size:     16px;
     --vkb-tab-font-size: 13px;
     --vkb-tab-height:    28px;
     --vkb-padding:       4px;
@@ -279,7 +327,7 @@
   :root {
     --vkb-key-gap:       5px;
     --vkb-key-height:    50px;
-    --vkb-font-size:     20px;
+    --vkb-font-size:     24px;
     --vkb-tab-font-size: 16px;
     --vkb-tab-height:    34px;
   }

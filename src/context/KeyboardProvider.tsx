@@ -104,6 +104,24 @@ export function KeyboardProvider({
     setActiveLayout(id);
   }, []);
 
+  // Toggle a global body class when a Nepali layout is active so we can
+  // apply a Nepali-only font to both keyboard keys and focused input fields.
+  React.useEffect(() => {
+    const cls = "vkb-nepal-font";
+    try {
+      if (String(activeLayout).startsWith("nepali")) {
+        document.body.classList.add(cls);
+      } else {
+        document.body.classList.remove(cls);
+      }
+    } catch (e) {
+      // document may be undefined in some SSR/test contexts; ignore silently.
+    }
+    return () => {
+      try { document.body.classList.remove(cls); } catch {};
+    };
+  }, [activeLayout]);
+
   /**
    * Handle a key press from the virtual keyboard.
    *

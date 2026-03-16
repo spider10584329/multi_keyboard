@@ -59,6 +59,13 @@ export function KeyboardKey({ keyDef, onPress, modifiers }: KeyboardKeyProps) {
       ? "vkb-key--wide"
       : "";
 
+  // Detect Devanagari script in the display label so we can apply
+  // script-specific styling (makes Devanagari labels visually match Latin)
+  const isDevanagari = /[\u0900-\u097F]/.test(String(displayLabel));
+  const scriptClass = isDevanagari ? "vkb-key--deva" : "vkb-key--latin";
+
+
+
   // Action keys get a modifier class for distinct styling
   const actionClass = keyDef.action ? `vkb-key--${keyDef.action}` : "";
 
@@ -67,7 +74,7 @@ export function KeyboardKey({ keyDef, onPress, modifiers }: KeyboardKeyProps) {
   return (
     <button
       type="button"
-      className={`vkb-key ${widthClass} ${actionClass} ${activeClass}`.trim()}
+      className={`vkb-key ${widthClass} ${actionClass} ${activeClass} ${scriptClass}`.trim()}
       onPointerDown={handlePointerDown}
       aria-pressed={isModifierActive ? true : undefined}
       aria-label={

@@ -38,6 +38,7 @@ export function LayoutTabs({ activeLayout, onSelect }: LayoutTabsProps) {
             role="tab"
             type="button"
             className={`vkb-tab ${isActive ? "vkb-tab--active" : ""}`.trim()}
+            data-layout={layout.id}
             aria-selected={isActive}
             onPointerDown={(e) => {
               e.preventDefault();

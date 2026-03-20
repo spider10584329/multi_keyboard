@@ -90,7 +90,7 @@ export const nepaliAlpha1Layout: KeyboardLayout = {
       { id: "na1_r4_10", label: "ऊ", value: "ऊ", codePoint: "U+090A" },
       { id: "na1_r4_11", label: "ए", value: "ए", codePoint: "U+090F" },
       { id: "na1_r4_del", label: "⌫", action: "backspace", width: "wide" },
-      { id: "na1_r4_spc", label: "Space", action: "space", width: "wide" },
+      { id: "na1_r4_spc", label: "", action: "space", width: "wide" },
       { id: "na1_r4_pg", label: "२ ▶", action: "page", switchTarget: "nepali_alpha_2" },
     ],
   ],

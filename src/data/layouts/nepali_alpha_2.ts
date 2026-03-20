@@ -108,7 +108,7 @@ export const nepaliAlpha2Layout: KeyboardLayout = {
       { id: "na2_r5_05", label: "_", value: "_" },
       { id: "na2_r5_06", label: "˜", value: "˜" },
       { id: "na2_r5_del", label: "⌫", action: "backspace", width: "wide" },
-      { id: "na2_r5_spc", label: "Space", action: "space", width: "wide" },
+      { id: "na2_r5_spc", label: "", action: "space", width: "wide" },
       { id: "na2_r5_pg", label: "◀ १", action: "page", switchTarget: "nepali_alpha_1", width: "wide" },
     ],
   ],

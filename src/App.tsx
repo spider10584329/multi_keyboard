@@ -17,6 +17,7 @@
  */
 
 import React from "react";
+import "./App.css";
 import { KeyboardProvider } from "./context/KeyboardProvider";
 import { VirtualKeyboardPortal } from "./components/VirtualKeyboard/VirtualKeyboard";
 import { DemoPage } from "./pages/DemoPage";

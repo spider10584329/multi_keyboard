@@ -64,8 +64,6 @@ export function KeyboardKey({ keyDef, onPress, modifiers }: KeyboardKeyProps) {
   const isDevanagari = /[\u0900-\u097F]/.test(String(displayLabel));
   const scriptClass = isDevanagari ? "vkb-key--deva" : "vkb-key--latin";
 
-
-
   // Action keys get a modifier class for distinct styling
   const actionClass = keyDef.action ? `vkb-key--${keyDef.action}` : "";
 

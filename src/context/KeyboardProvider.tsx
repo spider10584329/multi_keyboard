@@ -76,6 +76,7 @@ export function KeyboardProvider({
 
   // Refs keep the stable insertKey callback up-to-date without re-creating it
   const targetRef = useRef<HTMLElement | null>(null);
+  const activeLayoutRef = useRef<LayoutId>(defaultLayout);
   const shiftRef  = useRef(false);
   const capsRef   = useRef(false);
   const ctrlRef   = useRef(false);
@@ -101,24 +102,37 @@ export function KeyboardProvider({
   }, []);
 
   const setLayout = useCallback((id: LayoutId) => {
+    activeLayoutRef.current = id;
     setActiveLayout(id);
   }, []);
 
   // Toggle a global body class when a Nepali layout is active so we can
   // apply a Nepali-only font to both keyboard keys and focused input fields.
   React.useEffect(() => {
-    const cls = "vkb-nepal-font";
+    const nepalCls = "vkb-nepal-font";
+    const preetiCls = "vkb-preeti-font";
     try {
-      if (String(activeLayout).startsWith("nepali")) {
-        document.body.classList.add(cls);
+      const layoutStr = String(activeLayout);
+      if (layoutStr.startsWith("nepali")) {
+        document.body.classList.add(nepalCls);
+        // Apply Preeti font specifically for nepali_alpha_2
+        if (layoutStr === "nepali_alpha_2") {
+          document.body.classList.add(preetiCls);
+        } else {
+          document.body.classList.remove(preetiCls);
+        }
       } else {
-        document.body.classList.remove(cls);
+        document.body.classList.remove(nepalCls);
+        document.body.classList.remove(preetiCls);
       }
     } catch (e) {
       // document may be undefined in some SSR/test contexts; ignore silently.
     }
     return () => {
-      try { document.body.classList.remove(cls); } catch {};
+      try {
+        document.body.classList.remove(nepalCls);
+        document.body.classList.remove(preetiCls);
+      } catch {};
     };
   }, [activeLayout]);
 
@@ -138,6 +152,7 @@ export function KeyboardProvider({
 
     // ─ Page switch ──────────────────────────────────────────────────
     if (key.action === "page" && key.switchTarget) {
+      activeLayoutRef.current = key.switchTarget;
       setActiveLayout(key.switchTarget);
       return;
     }
@@ -159,25 +174,31 @@ export function KeyboardProvider({
       return;
     }
 
+    // ─ Validate target element ───────────────────────────────────
+    // All operations below require a valid target element to insert/edit text.
+    // If no target exists or it's not editable, ignore the key press.
+    if (!target) {
+      return;
+    }
+
     // ─ Ctrl + character key ──────────────────────────────────────
     // Dispatch a real Ctrl+key event; handle common edit shortcuts via
     // document.execCommand so the browser acts on them immediately.
     if (ctrlRef.current && key.value !== undefined) {
-      const char = Array.from(key.value)[0]?.toLowerCase() ?? "";
+      const firstChar = Array.from(key.value)[0];
+      const char = (firstChar as string | undefined)?.toLowerCase() ?? "";
       const execMap: Record<string, string> = {
         a: "selectAll", c: "copy", v: "paste",
         x: "cut",       z: "undo", y: "redo",
       };
-      if (target) {
-        target.focus();
-        const cmd = execMap[char];
-        if (cmd) {
-          try { document.execCommand(cmd); } catch {}
-        } else {
-          target.dispatchEvent(new KeyboardEvent("keydown", {
-            key: char, ctrlKey: true, bubbles: true, cancelable: true,
-          }));
-        }
+      target.focus();
+      const cmd = execMap[char];
+      if (cmd) {
+        try { document.execCommand(cmd); } catch {}
+      } else {
+        target.dispatchEvent(new KeyboardEvent("keydown", {
+          key: char, ctrlKey: true, bubbles: true, cancelable: true,
+        }));
       }
       setCtrl(false); // one-shot release
       return;
@@ -196,9 +217,9 @@ export function KeyboardProvider({
           insertText(target, "\t");
           break;
         case "enter":
-          if (target?.tagName.toLowerCase() === "textarea") {
+          if (target.tagName.toLowerCase() === "textarea") {
             insertText(target, "\n");
-          } else if (target?.tagName.toLowerCase() === "input") {
+          } else if (target.tagName.toLowerCase() === "input") {
             target.dispatchEvent(new KeyboardEvent("keydown", {
               key: "Enter", bubbles: true, cancelable: true,
             }));
@@ -233,7 +254,13 @@ export function KeyboardProvider({
       } else {
         text = key.value;
       }
-      insertText(target, text);
+      
+      // Wrap Preeti characters (from nepali_alpha_2 keyboard) in styled spans
+      // so they can be displayed larger in contentEditable elements
+      // IMPORTANT: Use ref to get current value, not state (to avoid stale closure)
+      const wrapInSpan = activeLayoutRef.current === "nepali_alpha_2";
+      insertText(target, text, wrapInSpan);
+      
       // One-shot Shift: auto-release after one character
       if (shiftRef.current) setShift(false);
     }

@@ -39,7 +39,7 @@ function FeedbackToast({ visible }: { visible: boolean }) {
 // ─── Main panel ───────────────────────────────────────────────────────────────
 
 function VirtualKeyboard() {
-  const { visible, activeLayout, setLayout, insertKey, shift, caps, ctrl } = useKeyboard();
+  const { visible, activeLayout, setLayout, insertKey, closeKeyboard, shift, caps, ctrl } = useKeyboard();
 
   const [toastVisible, setToastVisible] = useState(false);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -78,14 +78,26 @@ function VirtualKeyboard() {
         aria-label="Virtual keyboard"
         onPointerDown={(e) => e.preventDefault()}
       >
+        {/* Close button – only way to dismiss the keyboard */}
+        <button
+          className="vkb-close-btn"
+          aria-label="Close keyboard"
+          onPointerDown={(e) => {
+            e.preventDefault(); // keep focus on the editor
+            closeKeyboard();
+          }}
+        >
+          ✕
+        </button>
+
         {/* Script selector tabs */}
         <LayoutTabs activeLayout={activeLayout} onSelect={setLayout} />
 
         {/* Key rows */}
         <div className="vkb-rows">
-          {layout.rows.map((row, rowIndex) => (
+          {layout.rows.map((row: KeyDef[], rowIndex: number) => (
             <div key={rowIndex} className="vkb-row">
-              {row.map((keyDef) => (
+              {row.map((keyDef: KeyDef) => (
                 <KeyboardKey
                   key={keyDef.id}
                   keyDef={keyDef}
